@@ -22,7 +22,7 @@ class ShiftForm extends Form
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('shifts')->ignore($this->shift)
+                // Rule::unique('shifts')->ignore($this->shift)
             ],
             'start_time' => ['required'],
             'end_time' => ['nullable'],
