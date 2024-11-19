@@ -7,7 +7,9 @@ use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\ImportExportController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserAttendanceController;
+use App\Livewire\ScheduleManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -22,7 +24,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/', fn () => Auth::user()->isAdmin ? redirect('/admin') : redirect('/home'));
+    Route::get('/', fn() => Auth::user()->isAdmin ? redirect('/admin') : redirect('/home'));
 
     // USER AREA
     Route::middleware('user')->group(function () {
@@ -35,11 +37,12 @@ Route::middleware([
 
         Route::get('/attendance-history', [UserAttendanceController::class, 'history'])
             ->name('attendance-history');
+        Route::get('/schedules', ScheduleController::class)->name('schedules');
     });
 
     // ADMIN AREA
     Route::prefix('admin')->middleware('admin')->group(function () {
-        Route::get('/', fn () => redirect('/admin/dashboard'));
+        Route::get('/', fn() => redirect('/admin/dashboard'));
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('admin.dashboard');
