@@ -107,6 +107,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Education::class);
     }
+    public function schedules()
+    {
+        return $this->hasMany(EmployeeSchedule::class);
+    }
 
     public function division()
     {
