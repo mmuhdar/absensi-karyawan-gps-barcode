@@ -13,4 +13,9 @@ class EmployeeSchedule extends Model
         'shift_id',
         'date'
     ];
+
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class);
+    }
 }

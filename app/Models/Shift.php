@@ -15,4 +15,9 @@ class Shift extends Model
         'start_time',
         'end_time',
     ];
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

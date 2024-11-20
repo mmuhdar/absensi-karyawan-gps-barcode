@@ -17,6 +17,7 @@ class ScheduleManager extends Component
     public $schedule = [];
     public $selectedMonth;
     public $selectedYear;
+    // public $nowSchedule;
 
     public function mount()
     {
@@ -25,6 +26,7 @@ class ScheduleManager extends Component
         $this->year = now()->format('Y');
         $this->selectedMonth = now()->month;
         $this->selectedYear = now()->year;
+        // $this->nowSchedule = EmployeeSchedule::with('shift.attendances')->where('date', now()->format('Y-m-d'))->first();
 
         // Load shifts and schedules based on the current month and year
         $this->loadShiftsAndSchedules();

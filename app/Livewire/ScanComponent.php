@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\ExtendedCarbon;
 use App\Models\Attendance;
 use App\Models\Barcode;
+use App\Models\EmployeeSchedule;
 use App\Models\Shift;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -20,6 +21,7 @@ class ScanComponent extends Component
     public ?array $currentLiveCoords = null;
     public string $successMsg = '';
     public bool $isAbsence = false;
+    public $nowSchedule;
 
     public function scan(string $barcode)
     {
@@ -81,7 +83,8 @@ class ScanComponent extends Component
         $timeIn = $now->format('H:i:s');
         /** @var Shift */
         $shift = Shift::find($this->shift_id);
-        $status = Carbon::now()->setTimeFromTimeString($shift->start_time)->lt($now) ? 'late' : 'present';
+        // $status = Carbon::now()->setTimeFromTimeString($shift->start_time)->lt($now) ? 'late' : 'present';
+        $status = Carbon::now()->setTimeFromTimeString($shift->start_time)->addMinutes(30)->lt($now) ? 'late' : 'present';
         return Attendance::create([
             'user_id' => Auth::user()->id,
             'barcode_id' => $barcode->id,
@@ -118,6 +121,8 @@ class ScanComponent extends Component
     public function mount()
     {
         $this->shifts = Shift::all();
+        $this->nowSchedule = EmployeeSchedule::with('shift.attendances')->where('user_id', Auth::user()->id)
+            ->where('date', Carbon::today()->format('Y-m-d'))->first();
 
         /** @var Attendance */
         $attendance = Attendance::where('user_id', Auth::user()->id)
@@ -130,7 +135,7 @@ class ScanComponent extends Component
                 ->closestFromDateArray($this->shifts->pluck('start_time')->toArray());
 
             $this->shift_id = $this->shifts
-                ->where(fn (Shift $shift) => $shift->start_time == $closest->format('H:i:s'))
+                ->where(fn(Shift $shift) => $shift->start_time == $closest->format('H:i:s'))
                 ->first()->id;
         }
     }
