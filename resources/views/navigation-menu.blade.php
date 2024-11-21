@@ -209,6 +209,9 @@
                 <x-responsive-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                     {{ __('Home') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('schedules') }}" :active="request()->routeIs('schedules')">
+                    {{ __('Jadwal Shift') }}
+                </x-responsive-nav-link>
             @endif
         </div>
 
