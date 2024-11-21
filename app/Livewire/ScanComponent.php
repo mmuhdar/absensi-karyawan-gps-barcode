@@ -41,9 +41,9 @@ class ScanComponent extends Component
         $barcodeLocation = new LatLong($barcode->latLng['lat'], $barcode->latLng['lng']);
         $userLocation = new LatLong($this->currentLiveCoords[0], $this->currentLiveCoords[1]);
 
-        // if (($distance = $this->calculateDistance($userLocation, $barcodeLocation)) > $barcode->radius) {
-        //     return __('Location out of range') . ": $distance" . "m. Max: $barcode->radius" . "m";
-        // }
+        if (($distance = $this->calculateDistance($userLocation, $barcodeLocation)) > $barcode->radius) {
+            return __('Location out of range') . ": $distance" . "m. Max: $barcode->radius" . "m";
+        }
 
         /** @var Attendance */
         $existingAttendance = Attendance::where('user_id', Auth::user()->id)
