@@ -16,10 +16,11 @@ use Illuminate\Support\Carbon;
 class ScanComponent extends Component
 {
     public ?Attendance $attendance = null;
-    public $shift_id = null;
+    public $shift_id = 0;
     public $shifts = null;
     public ?array $currentLiveCoords = null;
     public string $successMsg = '';
+    public string $errorMsg = '';
     public bool $isAbsence = false;
     public $nowSchedule;
 
@@ -40,9 +41,9 @@ class ScanComponent extends Component
         $barcodeLocation = new LatLong($barcode->latLng['lat'], $barcode->latLng['lng']);
         $userLocation = new LatLong($this->currentLiveCoords[0], $this->currentLiveCoords[1]);
 
-        if (($distance = $this->calculateDistance($userLocation, $barcodeLocation)) > $barcode->radius) {
-            return __('Location out of range') . ": $distance" . "m. Max: $barcode->radius" . "m";
-        }
+        // if (($distance = $this->calculateDistance($userLocation, $barcodeLocation)) > $barcode->radius) {
+        //     return __('Location out of range') . ": $distance" . "m. Max: $barcode->radius" . "m";
+        // }
 
         /** @var Attendance */
         $existingAttendance = Attendance::where('user_id', Auth::user()->id)
@@ -83,8 +84,19 @@ class ScanComponent extends Component
         $timeIn = $now->format('H:i:s');
         /** @var Shift */
         $shift = Shift::find($this->shift_id);
-        // $status = Carbon::now()->setTimeFromTimeString($shift->start_time)->lt($now) ? 'late' : 'present';
-        $status = Carbon::now()->setTimeFromTimeString($shift->start_time)->addMinutes(30)->lt($now) ? 'late' : 'present';
+
+        // Check if shift is active
+        // $expiredTime = Carbon::createFromFormat('H:i:s', $shift->start_time);
+        // if ($now->format('H:i:s') > $expiredTime->addHours(4)->format('H:i:s')) {
+        //     $this->errorMsg = 'Waktu absensi melebihi batas waktu 4 jam dari waktu mulai shift.';
+        //     return;
+        // }
+        if (!$this->shift_id) {
+            $this->errorMsg = 'Maaf anda belum melakukan penjadwalan shift untuk hari ini.';
+            return;
+        }
+
+        $status = Carbon::now()->setTimeFromTimeString($shift->start_time)->addMinutes(60)->lt($now) ? 'late' : 'present';
         return Attendance::create([
             'user_id' => Auth::user()->id,
             'barcode_id' => $barcode->id,
@@ -123,20 +135,13 @@ class ScanComponent extends Component
         $this->shifts = Shift::all();
         $this->nowSchedule = EmployeeSchedule::with('shift.attendances')->where('user_id', Auth::user()->id)
             ->where('date', Carbon::today()->format('Y-m-d'))->first();
+        $this->shift_id = $this->nowSchedule->shift->id ?? 0;
 
         /** @var Attendance */
         $attendance = Attendance::where('user_id', Auth::user()->id)
             ->where('date', date('Y-m-d'))->first();
         if ($attendance) {
             $this->setAttendance($attendance);
-        } else {
-            // get closest shift from current time
-            $closest = ExtendedCarbon::now()
-                ->closestFromDateArray($this->shifts->pluck('start_time')->toArray());
-
-            $this->shift_id = $this->shifts
-                ->where(fn(Shift $shift) => $shift->start_time == $closest->format('H:i:s'))
-                ->first()->id;
         }
     }
 

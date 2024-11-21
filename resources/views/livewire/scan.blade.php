@@ -39,19 +39,14 @@
     @endif
 
     <div class="flex flex-col gap-4 md:flex-row">
+        {{-- && $nowSchedule --}}
         @if (!$isAbsence && $nowSchedule)
             <div class="flex flex-col gap-4">
                 <div>
-                    <x-select class="" id="shift" wire:model="shift_id" {{-- disabled="{{ !is_null($attendance) }}" --}}
-                        disabled="{{ true }}">
+                    <x-select class="" id="shift" wire:model="shift_id" disabled="{{ true }}">
                         <option value="{{ $nowSchedule->shift->id }}" selected>
                             {{ $nowSchedule->shift->name . ' | ' . $nowSchedule->shift->start_time . ' - ' . $nowSchedule->shift->end_time }}
                         </option>
-                        {{-- @foreach ($shifts as $shift) --}}
-                        {{-- <option value="{{ $shift->id }}" {{ $shift->id == $shift_id ? 'selected' : '' }}>
-                                {{ $shift->name . ' | ' . $shift->start_time . ' - ' . $shift->end_time }}
-                            </option> --}}
-                        {{-- @endforeach --}}
                     </x-select>
                     @error('shift_id')
                         <x-input-error for="shift" class="mt-2" message={{ $message }} />
@@ -65,6 +60,12 @@
             </div>
         @endif
         <div class="w-full">
+            @if (!$nowSchedule)
+                <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
+                    Maaf anda belum melakukan penjadwalan shift untuk hari ini. Batas Maksimal penjadwalan shift adalah
+                    H-1.
+                    </h4>
+            @endif
             <h4 id="scanner-error" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl"
                 wire:ignore>
             </h4>
@@ -90,6 +91,7 @@
                 @endif
                 <div class="my-6 h-72 w-full md:h-96" id="currentMap" wire:ignore></div>
             </h4>
+
             <div class="grid grid-cols-2 gap-3 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
                 <div
                     class="{{ $attendance?->status == 'late' ? 'bg-red-200 dark:bg-red-900' : 'bg-blue-200 dark:bg-blue-900' }} flex items-center justify-between rounded-md px-4 py-2 text-gray-800 dark:text-white dark:shadow-gray-700">
