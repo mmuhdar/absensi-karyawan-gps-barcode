@@ -32,6 +32,14 @@ class ScanComponent extends Component
             return __('Invalid shift');
         }
 
+        $now = Carbon::now();
+        $allowedScanTime = Carbon::createFromFormat('H:i:s', $this->nowSchedule->shift->start_time)->subHour();
+
+        if ($now->lt($allowedScanTime)) {
+            // return __('You cannot scan earlier than 1 hour before the shift starts.');
+            return __('Anda tidak bisa scan lebih awal dari 1 jam sebelum shift dimulai.');
+        }
+
         /** @var Barcode */
         $barcode = Barcode::firstWhere('value', $barcode);
         if (!Auth::check() || !$barcode) {
@@ -85,12 +93,6 @@ class ScanComponent extends Component
         /** @var Shift */
         $shift = Shift::find($this->shift_id);
 
-        // Check if shift is active
-        // $expiredTime = Carbon::createFromFormat('H:i:s', $shift->start_time);
-        // if ($now->format('H:i:s') > $expiredTime->addHours(4)->format('H:i:s')) {
-        //     $this->errorMsg = 'Waktu absensi melebihi batas waktu 4 jam dari waktu mulai shift.';
-        //     return;
-        // }
         if (!$this->shift_id) {
             $this->errorMsg = 'Maaf anda belum melakukan penjadwalan shift untuk hari ini.';
             return;

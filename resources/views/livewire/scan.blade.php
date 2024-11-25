@@ -40,7 +40,7 @@
 
     <div class="flex flex-col gap-4 md:flex-row">
         {{-- && $nowSchedule --}}
-        @if (!$isAbsence && $nowSchedule)
+        @if (!$isAbsence && $nowSchedule && $nowSchedule->shift->name !== 'Libur')
             <div class="flex flex-col gap-4">
                 <div>
                     <x-select class="" id="shift" wire:model="shift_id" disabled="{{ true }}">
@@ -64,6 +64,11 @@
                 <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
                     Maaf anda belum melakukan penjadwalan shift untuk hari ini. Batas Maksimal penjadwalan shift adalah
                     H-1.
+                    </h4>
+            @endif
+            @if ($nowSchedule->shift->name === 'Libur')
+                <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
+                    Status anda saat ini adalah libur. Tidak perlu melakukan absensi.
                     </h4>
             @endif
             <h4 id="scanner-error" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl"
