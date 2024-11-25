@@ -66,10 +66,10 @@
                     H-1.
                     </h4>
             @endif
-            @if ($nowSchedule->shift->name === 'Libur')
-                <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
+            @if ($nowSchedule?->shift?->name === 'Libur')
+                <h4 class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
                     Status anda saat ini adalah libur. Tidak perlu melakukan absensi.
-                    </h4>
+                </h4>
             @endif
             <h4 id="scanner-error" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl"
                 wire:ignore>
