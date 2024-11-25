@@ -36,7 +36,7 @@ class UserForm extends Form
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('users')->ignore($this->user)
+                // Rule::unique('users')->ignore($this->user)
             ],
             'nip' => [$requiredOrNullable, 'string', 'max:255'],
             'email' => [
