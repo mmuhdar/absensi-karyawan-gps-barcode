@@ -35,6 +35,7 @@ class CreateAbsensi extends Command
         // Buat absensi untuk user tersebut
         Attendance::create([
             'user_id' => $user->id,
+            'shift_id' => 2,
             'barcode_id' => 1,  // Menambahkan tanggal hari ini
             // 'time_in' => now()->format('H:i:s'),
             'time_in' => '07:57:13',
