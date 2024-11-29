@@ -30,7 +30,7 @@ class CreateAbsensi extends Command
     {
         $usersEmail = [
             'mat@aws.com',
-            'testing@aws.com'
+            'gomedsulas@gmail.com'
         ];
         $users = User::query()
             ->whereIn('email', $usersEmail)
