@@ -18,4 +18,9 @@ class EmployeeSchedule extends Model
     {
         return $this->belongsTo(Shift::class);
     }
+
+    public function attendance()
+    {
+        return $this->hasOne(Attendance::class);
+    }
 }

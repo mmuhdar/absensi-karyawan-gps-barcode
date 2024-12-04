@@ -20,6 +20,7 @@ class Attendance extends Model
 
     protected $fillable = [
         'user_id',
+        'schedule_id',
         'barcode_id',
         'date',
         'time_in',
@@ -54,6 +55,11 @@ class Attendance extends Model
     public function shift()
     {
         return $this->belongsTo(Shift::class);
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(EmployeeSchedule::class);
     }
 
     function getLatLngAttribute(): array|null

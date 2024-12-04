@@ -92,6 +92,8 @@ class ScanComponent extends Component
         $timeIn = $now->format('H:i:s');
         /** @var Shift */
         $shift = Shift::find($this->shift_id);
+        $scheduleId = $this->nowSchedule->id;
+
 
         if (!$this->shift_id) {
             $this->errorMsg = 'Maaf anda belum melakukan penjadwalan shift untuk hari ini.';
@@ -106,6 +108,7 @@ class ScanComponent extends Component
             'time_in' => $timeIn,
             'time_out' => null,
             'shift_id' => $shift->id,
+            'schedule_id' => $scheduleId,
             'latitude' => doubleval($this->currentLiveCoords[0]),
             'longitude' => doubleval($this->currentLiveCoords[1]),
             'status' => $status,

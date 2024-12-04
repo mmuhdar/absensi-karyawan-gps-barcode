@@ -2,6 +2,14 @@
 
     @php
         use Illuminate\Support\Carbon;
+        function checkProfile()
+        {
+            if (Auth::user()->division_id === null || Auth::user()->job_title_id === null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     @endphp
     @pushOnce('styles')
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -40,7 +48,7 @@
 
     <div class="flex flex-col gap-4 md:flex-row">
         {{-- && $nowSchedule --}}
-        @if (!$isAbsence && $nowSchedule && $nowSchedule->shift->name !== 'Libur')
+        @if (!$isAbsence && $nowSchedule && $nowSchedule->shift->name !== 'Libur' && checkProfile())
             <div class="flex flex-col gap-4">
                 <div>
                     <x-select class="" id="shift" wire:model="shift_id" disabled="{{ true }}">
@@ -64,6 +72,11 @@
                 <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
                     Maaf anda belum melakukan penjadwalan shift untuk hari ini. Batas Maksimal penjadwalan shift adalah
                     H-1.
+                    </h4>
+            @endif
+            @if (Auth::user()->division_id === null || Auth::user()->job_title_id === null)
+                <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
+                    Lengkapi semua data terlebih dahulu untuk melakukan scan.
                     </h4>
             @endif
             @if ($nowSchedule?->shift?->name === 'Libur')

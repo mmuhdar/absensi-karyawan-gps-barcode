@@ -55,7 +55,7 @@
                                             <span
                                                 class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ $day }}</span>
                                             <select wire:model="schedule.{{ $formattedDate }}"
-                                                @disabled($formattedDate <= now()->format('Y-m-d'))
+                                                @disabled($formattedDate < now()->format('Y-m-d'))
                                                 class="block disabled:opacity-60 disabled:cursor-not-allowed w-full mt-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 p-2.5 text-xs text-gray-900 dark:text-white focus:border-blue-500 focus:ring-blue-500"
                                                 :class="{
                                                     'bg-green-100 dark:bg-green-800': $el.value !== '',

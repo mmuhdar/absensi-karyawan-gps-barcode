@@ -73,204 +73,79 @@ class AttendanceComponent extends Component
             })
             ->when($this->division, fn(Builder $q) => $q->where('division_id', $this->division))
             ->when($this->jobTitle, fn(Builder $q) => $q->where('job_title_id', $this->jobTitle))
-            ->paginate(20)->through(function (User $user) {
+            ->paginate(20)
+            ->through(function (User $user) {
                 if ($this->date) {
-                    $attendances = new Collection(Cache::remember(
-                        "attendance-$user->id-$this->date",
-                        now()->addDay(),
-                        function () use ($user) {
-                            /** @var Collection<Attendance>  */
-                            $attendances = Attendance::filter(
-                                userId: $user->id,
-                                date: $this->date,
-                            )->get();
-
-                            return $attendances->map(
-                                function (Attendance $v) {
-                                    $v->setAttribute('coordinates', $v->lat_lng);
-                                    $v->setAttribute('lat', $v->latitude);
-                                    $v->setAttribute('lng', $v->longitude);
-                                    if ($v->attachment) {
-                                        $v->setAttribute('attachment', $v->attachment_url);
-                                    }
-                                    if ($v->shift) {
-                                        $v->setAttribute('shift', $v->shift->name);
-                                    }
-                                    return $v->getAttributes();
-                                }
-                            )->toArray();
-                        }
-                    ) ?? []);
+                    // Check if cache exists
+                    $cacheKey = "attendance-$user->id-$this->date";
+                    if (Cache::has($cacheKey)) {
+                        $attendances = new Collection(Cache::get($cacheKey));
+                    } else {
+                        /** @var Collection<Attendance> */
+                        $attendances = Attendance::filter(
+                            userId: $user->id,
+                            date: $this->date,
+                        )->get()->map(function (Attendance $v) {
+                            $v->setAttribute('coordinates', $v->lat_lng);
+                            $v->setAttribute('lat', $v->latitude);
+                            $v->setAttribute('lng', $v->longitude);
+                            if ($v->attachment) {
+                                $v->setAttribute('attachment', $v->attachment_url);
+                            }
+                            if ($v->shift) {
+                                $v->setAttribute('shift', $v->shift->name);
+                            }
+                            return $v->getAttributes();
+                        });
+                    }
                 } else if ($this->week) {
-                    $attendances = new Collection(Cache::remember(
-                        "attendance-$user->id-$this->week",
-                        now()->addDay(),
-                        function () use ($user) {
-                            /** @var Collection<Attendance>  */
-                            $attendances = Attendance::filter(
-                                userId: $user->id,
-                                week: $this->week,
-                            )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
-
-                            return $attendances->map(
-                                function (Attendance $v) {
-                                    $v->setAttribute('coordinates', $v->lat_lng);
-                                    $v->setAttribute('lat', $v->latitude);
-                                    $v->setAttribute('lng', $v->longitude);
-                                    if ($v->attachment) {
-                                        $v->setAttribute('attachment', $v->attachment_url);
-                                    }
-                                    return $v->getAttributes();
-                                }
-                            )->toArray();
-                        }
-                    ) ?? []);
+                    $cacheKey = "attendance-$user->id-$this->week";
+                    if (Cache::has($cacheKey)) {
+                        $attendances = new Collection(Cache::get($cacheKey));
+                    } else {
+                        /** @var Collection<Attendance> */
+                        $attendances = Attendance::filter(
+                            userId: $user->id,
+                            week: $this->week,
+                        )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note'])->map(function (Attendance $v) {
+                            $v->setAttribute('coordinates', $v->lat_lng);
+                            $v->setAttribute('lat', $v->latitude);
+                            $v->setAttribute('lng', $v->longitude);
+                            if ($v->attachment) {
+                                $v->setAttribute('attachment', $v->attachment_url);
+                            }
+                            return $v->getAttributes();
+                        });
+                    }
                 } else if ($this->month) {
                     $my = Carbon::parse($this->month);
-                    $attendances = new Collection(Cache::remember(
-                        "attendance-$user->id-$my->month-$my->year",
-                        now()->addDay(),
-                        function () use ($user) {
-                            /** @var Collection<Attendance>  */
-                            $attendances = Attendance::filter(
-                                month: $this->month,
-                                userId: $user->id,
-                            )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
-
-                            return $attendances->map(
-                                function (Attendance $v) {
-                                    $v->setAttribute('coordinates', $v->lat_lng);
-                                    $v->setAttribute('lat', $v->latitude);
-                                    $v->setAttribute('lng', $v->longitude);
-                                    if ($v->attachment) {
-                                        $v->setAttribute('attachment', $v->attachment_url);
-                                    }
-                                    return $v->getAttributes();
-                                }
-                            )->toArray();
-                        }
-                    ) ?? []);
+                    $cacheKey = "attendance-$user->id-$my->month-$my->year";
+                    if (Cache::has($cacheKey)) {
+                        $attendances = new Collection(Cache::get($cacheKey));
+                    } else {
+                        /** @var Collection<Attendance> */
+                        $attendances = Attendance::filter(
+                            month: $this->month,
+                            userId: $user->id,
+                        )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note'])->map(function (Attendance $v) {
+                            $v->setAttribute('coordinates', $v->lat_lng);
+                            $v->setAttribute('lat', $v->latitude);
+                            $v->setAttribute('lng', $v->longitude);
+                            if ($v->attachment) {
+                                $v->setAttribute('attachment', $v->attachment_url);
+                            }
+                            return $v->getAttributes();
+                        });
+                    }
                 } else {
                     /** @var Collection */
                     $attendances = Attendance::where('user_id', $user->id)
                         ->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
                 }
+
                 $user->attendances = $attendances;
                 return $user;
             });
         return view('livewire.admin.attendance', ['employees' => $employees, 'dates' => $dates]);
     }
-    // public function render()
-    // {
-    //     if ($this->date) {
-    //         $dates = [Carbon::parse($this->date)];
-    //     } else if ($this->week) {
-    //         // Adjust the start and end of the week to be Monday to Saturday
-    //         $start = Carbon::parse($this->week)->startOfWeek()->addDay(); // Start on Monday
-    //         $end = $start->copy()->addDays(5); // End on Saturday
-
-    //         $dates = $start->range($end)->toArray();
-    //     } else if ($this->month) {
-    //         $start = Carbon::parse($this->month)->startOfMonth();
-    //         $end = Carbon::parse($this->month)->endOfMonth();
-    //         $dates = $start->range($end)->toArray();
-    //     }
-
-    //     $employees = User::where('group', 'user')
-    //         ->when($this->search, function (Builder $q) {
-    //             return $q->where('name', 'like', '%' . $this->search . '%')
-    //                 ->orWhere('nip', 'like', '%' . $this->search . '%');
-    //         })
-    //         ->when($this->division, fn(Builder $q) => $q->where('division_id', $this->division))
-    //         ->when($this->jobTitle, fn(Builder $q) => $q->where('job_title_id', $this->jobTitle))
-    //         ->paginate(20)
-    //         ->through(function (User $user) {
-    //             if ($this->date) {
-    //                 $attendances = new Collection(Cache::remember(
-    //                     "attendance-$user->id-$this->date",
-    //                     now()->addDay(),
-    //                     function () use ($user) {
-    //                         /** @var Collection<Attendance>  */
-    //                         $attendances = Attendance::filter(
-    //                             userId: $user->id,
-    //                             date: $this->date,
-    //                         )->get();
-
-    //                         return $attendances->map(
-    //                             function (Attendance $v) {
-    //                                 $v->setAttribute('coordinates', $v->lat_lng);
-    //                                 $v->setAttribute('lat', $v->latitude);
-    //                                 $v->setAttribute('lng', $v->longitude);
-    //                                 if ($v->attachment) {
-    //                                     $v->setAttribute('attachment', $v->attachment_url);
-    //                                 }
-    //                                 if ($v->shift) {
-    //                                     $v->setAttribute('shift', $v->shift->name);
-    //                                 }
-    //                                 return $v->getAttributes();
-    //                             }
-    //                         )->toArray();
-    //                     }
-    //                 ) ?? []);
-    //             } else if ($this->week) {
-    //                 $attendances = new Collection(Cache::remember(
-    //                     "attendance-$user->id-$this->week",
-    //                     now()->addDay(),
-    //                     function () use ($user) {
-    //                         /** @var Collection<Attendance>  */
-    //                         $attendances = Attendance::filter(
-    //                             userId: $user->id,
-    //                             week: $this->week,
-    //                         )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
-
-    //                         return $attendances->map(
-    //                             function (Attendance $v) {
-    //                                 $v->setAttribute('coordinates', $v->lat_lng);
-    //                                 $v->setAttribute('lat', $v->latitude);
-    //                                 $v->setAttribute('lng', $v->longitude);
-    //                                 if ($v->attachment) {
-    //                                     $v->setAttribute('attachment', $v->attachment_url);
-    //                                 }
-    //                                 return $v->getAttributes();
-    //                             }
-    //                         )->toArray();
-    //                     }
-    //                 ) ?? []);
-    //             } else if ($this->month) {
-    //                 $my = Carbon::parse($this->month);
-    //                 $attendances = new Collection(Cache::remember(
-    //                     "attendance-$user->id-$my->month-$my->year",
-    //                     now()->addDay(),
-    //                     function () use ($user, $my) {
-    //                         /** @var Collection<Attendance>  */
-    //                         $attendances = Attendance::filter(
-    //                             month: $this->month,
-    //                             userId: $user->id,
-    //                         )->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
-
-    //                         return $attendances->map(
-    //                             function (Attendance $v) {
-    //                                 $v->setAttribute('coordinates', $v->lat_lng);
-    //                                 $v->setAttribute('lat', $v->latitude);
-    //                                 $v->setAttribute('lng', $v->longitude);
-    //                                 if ($v->attachment) {
-    //                                     $v->setAttribute('attachment', $v->attachment_url);
-    //                                 }
-    //                                 return $v->getAttributes();
-    //                             }
-    //                         )->toArray();
-    //                     }
-    //                 ) ?? []);
-    //             } else {
-    //                 /** @var Collection */
-    //                 $attendances = Attendance::where('user_id', $user->id)
-    //                     ->get(['id', 'status', 'date', 'latitude', 'longitude', 'attachment', 'note']);
-    //             }
-
-    //             $user->attendances = $attendances;
-    //             return $user;
-    //         });
-
-    //     return view('livewire.admin.attendance', ['employees' => $employees, 'dates' => $dates]);
-    // }
 }

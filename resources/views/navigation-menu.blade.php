@@ -4,11 +4,11 @@
         <div class="flex h-16 justify-between">
             <div class="flex">
                 <!-- Logo -->
-                <div class="flex shrink-0 items-center">
+                {{-- <div class="flex shrink-0 items-center">
                     <a href="{{ Auth::user()->isAdmin ? route('admin.dashboard') : route('home') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
-                </div>
+                </div> --}}
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-2 sm:-my-px sm:ms-6 sm:flex md:ms-10 md:space-x-5 lg:space-x-8">
