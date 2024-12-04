@@ -73,7 +73,7 @@
                 @php
                     $class = 'px-4 py-3 text-sm font-medium text-gray-900 dark:text-white';
                 @endphp
-                @foreach ($employees->sortBy('name') as $employee)
+                @foreach ($employees as $employee)
                     @php
                         $attendance = $employee->attendance;
                         $schedules = \App\Models\EmployeeSchedule::with('shift')

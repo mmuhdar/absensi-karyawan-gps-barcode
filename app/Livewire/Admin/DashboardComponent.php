@@ -21,6 +21,7 @@ class DashboardComponent extends Component
 
         /** @var Collection<User>  */
         $employees = User::where('group', 'user')
+            ->orderBy('name', 'asc')
             ->paginate(20)
             ->through(function (User $user) use ($attendances) {
                 return $user->setAttribute(
