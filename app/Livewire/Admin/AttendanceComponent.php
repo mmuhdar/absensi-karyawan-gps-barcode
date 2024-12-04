@@ -67,6 +67,7 @@ class AttendanceComponent extends Component
             $dates = $start->range($end)->toArray();
         }
         $employees = User::where('group', 'user')
+            ->orderBy('name', 'asc')
             ->when($this->search, function (Builder $q) {
                 return $q->where('name', 'like', '%' . $this->search . '%')
                     ->orWhere('nip', 'like', '%' . $this->search . '%');
