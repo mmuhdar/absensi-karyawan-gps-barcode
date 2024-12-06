@@ -35,7 +35,7 @@ class CreateAbsensi extends Command
         }
 
         $usersEmail = [
-            'mat@aws.com',
+            'mmuhdar08@gmail.com',
             'gomedsulas@gmail.com'
         ];
         $users = User::query()

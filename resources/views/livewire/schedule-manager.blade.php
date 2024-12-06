@@ -5,7 +5,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div>
             <label for="month" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Bulan</label>
-            <select wire:model="month" id="month"
+            <select wire:model.live="month" id="month"
                 class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm text-gray-900 dark:text-white focus:border-blue-500 focus:ring-blue-500">
                 @for ($m = 1; $m <= 12; $m++)
                     <option value="{{ $m }}">{{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
@@ -14,7 +14,7 @@
         </div>
         <div>
             <label for="year" class="block text-gray-700 dark:text-gray-300 font-medium mb-2">Tahun</label>
-            <select wire:model="year" id="year"
+            <select wire:model.live="year" id="year"
                 class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm text-gray-900 dark:text-white focus:border-blue-500 focus:ring-blue-500">
                 @for ($y = now()->year - 5; $y <= now()->year + 5; $y++)
                     <option value="{{ $y }}">{{ $y }}</option>
@@ -54,7 +54,7 @@
                                         <div class="flex flex-col items-center">
                                             <span
                                                 class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ $day }}</span>
-                                            <select wire:model="schedule.{{ $formattedDate }}"
+                                            <select wire:model.live="schedule.{{ $formattedDate }}"
                                                 @disabled($formattedDate < now()->format('Y-m-d'))
                                                 class="block disabled:opacity-60 disabled:cursor-not-allowed w-full mt-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 p-2.5 text-xs text-gray-900 dark:text-white focus:border-blue-500 focus:ring-blue-500"
                                                 :class="{
