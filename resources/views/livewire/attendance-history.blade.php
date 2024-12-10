@@ -31,6 +31,10 @@
                 $excusedCount = 0;
                 $sickCount = 0;
                 $absentCount = 0;
+                $cutiCount = 0;
+                $dinasCount = 0;
+                $holidayCount = 0;
+                $lepasJagaCount = 0;
             @endphp
             @foreach ($dates as $date)
                 @php
@@ -52,11 +56,35 @@
                                 'bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 border border-green-600';
                             $presentCount++;
                             break;
+                        case 'dinas_luar':
+                            $shortStatus = 'DL';
+                            $bgColor =
+                                'bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 border border-green-600';
+                            $dinasCount++;
+                            break;
+                        case 'holiday':
+                            $shortStatus = 'L';
+                            $bgColor =
+                                'bg-cyan-200 dark:bg-cyan-800 hover:bg-cyan-300 dark:hover:bg-cyan-700 border border-cyan-600';
+                            $holidayCount++;
+                            break;
+                        case 'lepas_jaga':
+                            $shortStatus = 'LJ';
+                            $bgColor =
+                                'bg-cyan-200 dark:bg-cyan-800 hover:bg-cyan-300 dark:hover:bg-cyan-700 border border-cyan-600';
+                            $lepasJagaCount++;
+                            break;
                         case 'late':
                             $shortStatus = 'T';
                             $bgColor =
                                 'bg-amber-200 dark:bg-amber-800 hover:bg-amber-300 dark:hover:bg-amber-700 border border-amber-600';
                             $lateCount++;
+                            break;
+                        case 'cuti':
+                            $shortStatus = 'C';
+                            $bgColor =
+                                'bg-orange-200 dark:bg-orange-800 hover:bg-orange-300 dark:hover:bg-orange-700 border border-orange-600';
+                            $cutiCount++;
                             break;
                         case 'excused':
                             $shortStatus = 'I';
@@ -115,14 +143,22 @@
             <div
                 class="flex items-center justify-between rounded-md bg-green-200 px-4 py-2 text-gray-800 dark:bg-green-900 dark:text-white dark:shadow-gray-700">
                 <div>
-                    <h4 class="text-lg font-semibold md:text-xl">Hadir: {{ $presentCount + $lateCount }}</h4>
-                    Terlambat: {{ $lateCount }}
+                    <h4 class="text-lg font-semibold md:text-xl">Hadir: {{ $presentCount + $lateCount + $dinasCount }}
+                    </h4>
+                    <p>Terlambat: {{ $lateCount }}</p>
+                    <p>Dinas Luar: {{ $dinasCount }}</p>
                 </div>
             </div>
             <div
                 class="flex items-center justify-between rounded-md bg-blue-200 px-4 py-2 text-gray-800 dark:bg-blue-900 dark:text-white dark:shadow-gray-700">
                 <div>
                     <h4 class="text-lg font-semibold md:text-xl">Izin: {{ $excusedCount }}</h4>
+                </div>
+            </div>
+            <div
+                class="flex items-center justify-between rounded-md bg-orange-200 px-4 py-2 text-gray-800 dark:bg-orange-900 dark:text-white dark:shadow-gray-700">
+                <div>
+                    <h4 class="text-lg font-semibold md:text-xl">Cuti: {{ $cutiCount }}</h4>
                 </div>
             </div>
             <div
@@ -135,6 +171,15 @@
                 class="flex items-center justify-between rounded-md bg-red-200 px-4 py-2 text-gray-800 dark:bg-red-900 dark:text-white dark:shadow-gray-700">
                 <div>
                     <h4 class="text-lg font-semibold md:text-xl">Absen: {{ $absentCount }}</h4>
+                </div>
+            </div>
+            <div
+                class="flex items-center justify-between rounded-md bg-cyan-200 px-4 py-2 text-gray-800 dark:bg-cyan-900 dark:text-white dark:shadow-gray-700">
+                <div>
+                    <h4 class="text-lg font-semibold md:text-xl">Libur: {{ $holidayCount + $lepasJagaCount }}
+                    </h4>
+                    <p>Libur: {{ $holidayCount }}</p>
+                    <p>Lepas Jaga: {{ $lepasJagaCount }}</p>
                 </div>
             </div>
         </div>

@@ -37,10 +37,15 @@ class DashboardComponent extends Component
         $lateCount = $attendances->where(fn($attendance) => $attendance->status === 'late')->count();
         $excusedCount = $attendances->where(fn($attendance) => $attendance->status === 'excused')->count();
         $sickCount = $attendances->where(fn($attendance) => $attendance->status === 'sick')->count();
-        $holidayCount = EmployeeSchedule::where('date', date('Y-m-d'))->whereHas('shift', function ($query) {
-            return $query->where('name', 'Libur');
-        })->count();
-        $absentCount = $employeesCount - ($presentCount + $lateCount + $excusedCount + $sickCount) - $holidayCount;
+        // $holidayCount = EmployeeSchedule::where('date', date('Y-m-d'))->whereHas('shift', function ($query) {
+        //     return $query->where('name', 'Libur');
+        // })->count();
+        $holidayCount = $attendances->where(fn($attendance) => $attendance->status === 'holiday')->count();
+        $cutiCount = $attendances->where(fn($attendance) => $attendance->status === 'cuti')->count();
+        $dinasCount = $attendances->where(fn($attendance) => $attendance->status === 'dinas_luar')->count();
+        $lepasJagaCount = $attendances->where(fn($attendance) => $attendance->status === 'lepas_jaga')->count();
+        $totalHolidayCount = $holidayCount + $lepasJagaCount;
+        $absentCount = $employeesCount - ($presentCount + $lateCount + $excusedCount + $sickCount + $totalHolidayCount + $cutiCount + $dinasCount);
 
         return view('livewire.admin.dashboard', [
             'employees' => $employees,
@@ -50,6 +55,10 @@ class DashboardComponent extends Component
             'excusedCount' => $excusedCount,
             'sickCount' => $sickCount,
             'absentCount' => $absentCount,
+            'cutiCount' => $cutiCount,
+            'dinasCount' => $dinasCount,
+            'lepasJagaCount' => $lepasJagaCount,
+            'holidayCount' => $holidayCount,
         ]);
     }
 }

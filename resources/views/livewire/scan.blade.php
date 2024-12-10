@@ -173,6 +173,14 @@
                         <x-heroicon-o-envelope-open class="h-6 w-6 text-white" />
                     </div>
                 </a>
+                <a href="{{ route('apply-holiday') }}">
+                    <div
+                        class="flex flex-col-reverse items-center justify-center gap-2 rounded-md bg-cyan-500 px-4 py-2 text-center font-medium text-white shadow-md shadow-gray-400 transition duration-100 hover:bg-cyan-600 dark:shadow-gray-700 md:flex-row md:gap-3">
+                        Ajukan Libur
+                        <x-heroicon-o-home class="h-6 w-6 text-white" />
+                    </div>
+                </a>
+
                 <a href="{{ route('attendance-history') }}">
                     <div
                         class="flex flex-col-reverse items-center justify-center gap-2 rounded-md bg-blue-500 px-4 py-2 text-center font-medium text-white shadow-md shadow-gray-400 hover:bg-blue-600 dark:shadow-gray-700 md:flex-row md:gap-3">

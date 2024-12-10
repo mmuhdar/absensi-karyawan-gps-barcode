@@ -119,7 +119,7 @@
                         </th>
                     @endif
                     @if (!$isPerDayFilter)
-                        @foreach (['H', 'T', 'I', 'S', 'A'] as $_st)
+                        @foreach (['H', 'T', 'I', 'S', 'A', 'C', 'DL', 'LJ', 'L'] as $_st)
                             <th scope="col"
                                 class="text-nowrap border border-gray-300 px-1 py-3 text-center text-xs font-medium text-gray-500 dark:border-gray-600 dark:text-gray-300">
                                 {{ $_st }}
@@ -185,6 +185,10 @@
                             $excusedCount = 0;
                             $sickCount = 0;
                             $absentCount = 0;
+                            $holidayCount = 0;
+                            $cutiCount = 0;
+                            $dinasCount = 0;
+                            $lepasJagaCount = 0;
                         @endphp
                         @foreach ($dates as $date)
                             @php
@@ -229,6 +233,30 @@
                                             'bg-red-200 dark:bg-red-800 hover:bg-red-300 dark:hover:bg-red-700 border border-red-300 dark:border-red-600';
                                         $absentCount++;
                                         break;
+                                    case 'holiday':
+                                        $shortStatus = 'L';
+                                        $bgColor =
+                                            'bg-cyan-200 dark:bg-cyan-800 hover:bg-cyan-300 dark:hover:bg-cyan-700 border border-cyan-300 dark:border-cyan-600';
+                                        $holidayCount++;
+                                        break;
+                                    case 'lepas_jaga':
+                                        $shortStatus = 'LJ';
+                                        $bgColor =
+                                            'bg-cyan-200 dark:bg-cyan-800 hover:bg-cyan-300 dark:hover:bg-cyan-700 border border-cyan-300 dark:border-cyan-600';
+                                        $lepasJagaCount++;
+                                        break;
+                                    case 'dinas_luar':
+                                        $shortStatus = 'DL';
+                                        $bgColor =
+                                            'bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 border border-green-300 dark:border-green-600';
+                                        $dinasCount++;
+                                        break;
+                                    case 'cuti':
+                                        $shortStatus = 'C';
+                                        $bgColor =
+                                            'bg-orange-200 dark:bg-orange-800 hover:bg-orange-300 dark:hover:bg-orange-700 border border-orange-300 dark:border-orange-600';
+                                        $cutiCount++;
+                                        break;
                                     default:
                                         $shortStatus = '-';
                                         $bgColor =
@@ -265,7 +293,7 @@
 
                         {{-- Total --}}
                         @if (!$isPerDayFilter)
-                            @foreach ([$presentCount, $lateCount, $excusedCount, $sickCount, $absentCount] as $statusCount)
+                            @foreach ([$presentCount, $lateCount, $excusedCount, $sickCount, $absentCount, $cutiCount, $dinasCount, $lepasJagaCount, $holidayCount] as $statusCount)
                                 <td
                                     class="cursor-pointer border border-gray-300 px-1 py-3 text-center text-sm font-medium text-gray-900 group-hover:bg-gray-100 dark:border-gray-600 dark:text-white dark:group-hover:bg-gray-700">
                                     {{ $statusCount }}

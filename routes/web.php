@@ -34,6 +34,10 @@ Route::middleware([
             ->name('apply-leave');
         Route::post('/apply-leave', [UserAttendanceController::class, 'storeLeaveRequest'])
             ->name('store-leave-request');
+        Route::get('/apply-holiday', [UserAttendanceController::class, 'applyHoliday'])
+            ->name('apply-holiday');
+        Route::post('/apply-holiday', [UserAttendanceController::class, 'storeHolidayRequest'])
+            ->name('store-holiday-request');
 
         Route::get('/attendance-history', [UserAttendanceController::class, 'history'])
             ->name('attendance-history');

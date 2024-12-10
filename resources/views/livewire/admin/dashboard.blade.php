@@ -18,12 +18,21 @@
         <div
             class="rounded-md bg-green-200 px-8 py-4 text-gray-800 dark:bg-green-900 dark:text-white dark:shadow-gray-700">
             <span class="text-2xl font-semibold md:text-3xl">Hadir: {{ $presentCount }}</span><br>
-            <span>Terlambat: {{ $lateCount }}</span>
+            <span>Terlambat: {{ $lateCount }}</span><br>
+            <span>Dinas Luar: {{ $dinasCount }}</span>
+        </div>
+        <div
+            class="rounded-md bg-cyan-200 px-8 py-4 text-gray-800 dark:bg-cyan-900 dark:text-white dark:shadow-gray-700">
+            <span class="text-2xl font-semibold md:text-3xl">Libur: {{ $holidayCount + $lepasJagaCount }} </span><br>
+            <span>Lepas Jaga: {{ $lepasJagaCount }}</span>
+        </div>
+        <div
+            class="rounded-md bg-orange-200 px-8 py-4 text-gray-800 dark:bg-orange-900 dark:text-white dark:shadow-gray-700">
+            <span class="text-2xl font-semibold md:text-3xl">Cuti: {{ $cutiCount }}</span>
         </div>
         <div
             class="rounded-md bg-blue-200 px-8 py-4 text-gray-800 dark:bg-blue-900 dark:text-white dark:shadow-gray-700">
-            <span class="text-2xl font-semibold md:text-3xl">Izin: {{ $excusedCount }}</span><br>
-            <span>Izin/Cuti</span>
+            <span class="text-2xl font-semibold md:text-3xl">Izin: {{ $excusedCount }}</span>
         </div>
         <div
             class="rounded-md bg-purple-200 px-8 py-4 text-gray-800 dark:bg-purple-900 dark:text-white dark:shadow-gray-700">
@@ -115,6 +124,26 @@
                                 $shortStatus = 'A';
                                 $bgColor =
                                     'bg-red-200 dark:bg-red-800 hover:bg-red-300 dark:hover:bg-red-700 border border-red-300 dark:border-red-600';
+                                break;
+                            case 'cuti':
+                                $shortStatus = 'C';
+                                $bgColor =
+                                    'bg-orange-200 dark:bg-orange-800 hover:bg-orange-300 dark:hover:bg-orange-700 border border-orange-300 dark:border-orange-600';
+                                break;
+                            case 'dinas_luar':
+                                $shortStatus = 'DL';
+                                $bgColor =
+                                    'bg-green-200 dark:bg-green-800 hover:bg-green-300 dark:hover:bg-green-700 border border-green-300 dark:border-green-600';
+                                break;
+                            case 'holiday':
+                                $shortStatus = 'L';
+                                $bgColor =
+                                    'bg-cyan-200 dark:bg-cyan-800 hover:bg-cyan-300 dark:hover:bg-cyan-700 border border-cyan-300 dark:border-cyan-600';
+                                break;
+                            case 'lepas_jaga':
+                                $shortStatus = 'LJ';
+                                $bgColor =
+                                    'bg-cyan-200 dark:bg-cyan-800 hover:bg-cyan-300 dark:hover:bg-cyan-700 border border-cyan-300 dark:border-cyan-600';
                                 break;
                             default:
                                 $shortStatus = '-';
