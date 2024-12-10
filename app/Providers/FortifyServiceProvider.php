@@ -62,12 +62,12 @@ class FortifyServiceProvider extends ServiceProvider
                 $existingUser = User::where('last_ip', $currentIp)->first();
 
                 // Jika ada user lain dengan IP yang sama, blokir login
-                if ($user->group === 'user') {
-                    if ($existingUser && $existingUser->id !== $user->id) {
-                        Auth::logout();
-                        abort(403, _('Perangkat ini telah di pakai login oleh user lain. Mohon gunakan perangkat lain nya.'));
-                    }
-                }
+                // if ($user->group === 'user') {
+                //     if ($existingUser && $existingUser->id !== $user->id) {
+                //         Auth::logout();
+                //         abort(403, _('Perangkat ini telah di pakai login oleh user lain. Mohon gunakan perangkat lain nya.'));
+                //     }
+                // }
 
                 // Jika IP tidak ada masalah, simpan IP untuk user yang baru login
                 $user->last_ip = $user->group !== 'user' ? null : $currentIp;
