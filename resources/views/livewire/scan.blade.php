@@ -47,8 +47,7 @@
     @endif
 
     <div class="flex flex-col gap-4 md:flex-row">
-        {{-- && $nowSchedule --}}
-        @if (!$isAbsence && $nowSchedule && $nowSchedule->shift->name !== 'Libur' && checkProfile())
+        @if (!$isAbsence && $nowSchedule && checkProfile())
             <div class="flex flex-col gap-4">
                 <div>
                     <x-select class="" id="shift" wire:model="shift_id" disabled="{{ true }}">
@@ -68,10 +67,9 @@
             </div>
         @endif
         <div class="w-full">
-            @if (!$nowSchedule)
+            @if (!$nowSchedule && !$isAbsence)
                 <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
-                    Maaf anda belum melakukan penjadwalan shift untuk hari ini. Batas Maksimal penjadwalan shift adalah
-                    H-1.
+                    Maaf anda belum melakukan penjadwalan shift untuk hari ini.
                     </h4>
             @endif
             @if (Auth::user()->division_id === null || Auth::user()->job_title_id === null)
@@ -79,7 +77,7 @@
                     Lengkapi semua data terlebih dahulu untuk melakukan scan.
                     </h4>
             @endif
-            @if ($nowSchedule?->shift?->name === 'Libur')
+            @if ($isAbsence && ($attendance->status == 'holiday' || $attendance->status == 'lepas_jaga'))
                 <h4 class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
                     Status anda saat ini adalah libur. Tidak perlu melakukan absensi.
                 </h4>
