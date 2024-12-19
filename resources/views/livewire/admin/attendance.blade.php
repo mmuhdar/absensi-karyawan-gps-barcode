@@ -171,10 +171,21 @@
                                     $timeIn = $attendance ? $attendance['time_in'] : null;
                                     $timeOut = $attendance ? $attendance['time_out'] : null;
                                 @endphp
-                                <td
+                                {{-- <td
                                     class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
                                     {{ $attendance['shift'] ?? ($schedule?->shift?->name ?? '-') }}
-                                </td>
+                                </td> --}}
+                                @if ($schedule)
+                                    <td
+                                        class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+                                        {{ $schedule->shift?->name ?? '-' }}
+                                    </td>
+                                @else
+                                    <td
+                                        class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+                                        {{ $attendance->shift?->name ?? 'Shift belum diatur' }}
+                                    </td>
+                                @endif
                             @endif
                         @endif
 
@@ -265,7 +276,8 @@
                                 }
 
                             @endphp
-                            @if (!$isPerDayFilter && $attendance && ($attendance['attachment'] || $attendance['note'] || $attendance['coordinates']))
+                            {{-- @if (!$isPerDayFilter && $attendance && ($attendance['attachment'] || $attendance['note'] || $attendance['coordinates'])) --}}
+                            @if (!$isPerDayFilter && $attendance)
                                 <td
                                     class="{{ $bgColor }} cursor-pointer text-center text-sm font-medium text-gray-900 dark:text-white">
                                     <button class="w-full px-1 py-3" wire:click="show({{ $attendance['id'] }})"

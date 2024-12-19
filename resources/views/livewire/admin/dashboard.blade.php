@@ -170,12 +170,17 @@
                             class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
                             {{ $employee->jobTitle?->name ?? '-' }}
                         </td>
-
-                        <td
-                            class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
-                            {{ $status == '-' ? 'Libur' : $attendance->shift?->name ?? '-' }}
-                        </td>
-
+                        @if ($schedule)
+                            <td
+                                class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+                                {{ $schedule->shift?->name ?? '-' }}
+                            </td>
+                        @else
+                            <td
+                                class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+                                {{ $attendance->shift?->name ?? 'Shift belum diatur' }}
+                            </td>
+                        @endif
                         {{-- Absensi --}}
                         <td
                             class="{{ $bgColor }} text-nowrap px-1 py-3 text-center text-sm font-medium text-gray-900 dark:text-white">
