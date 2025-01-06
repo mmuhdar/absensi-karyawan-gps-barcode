@@ -92,6 +92,9 @@ Route::middleware([
         Route::get('/attendances/report', [AttendanceController::class, 'report'])
             ->name('admin.attendances.report');
 
+        Route::put('/attendance/{id}', [AttendanceController::class, 'update'])->name('admin.attendance.update');
+        Route::delete('/attendance/{id}', [AttendanceController::class, 'destroy'])->name('admin.attendance.destroy');
+
         // Import/Export
         Route::get('/import-export/users', [ImportExportController::class, 'users'])
             ->name('admin.import-export.users');

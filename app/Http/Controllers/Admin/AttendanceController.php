@@ -137,6 +137,39 @@ class AttendanceController extends Controller
         return $pdf->stream();
         // return $pdf->download();
     }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'date' => ['required', 'date'],
+            'status' => ['required', 'string', 'in:present,late,excused,sick,absent,holiday,cuti,lepas_jaga,dinas_luar'],
+            'time_in' => ['nullable', 'date_format:H:i:s'],
+            'time_out' => ['nullable', 'date_format:H:i:s'],
+        ]);
+
+        $attendance = Attendance::findOrFail($id);
+        $attendance->update([
+            'date' => $validated['date'],
+            'status' => $validated['status'],
+            'time_in' => $validated['time_in'],
+            'time_out' => $validated['time_out'],
+        ]);
+
+        return response()->json([
+            'message' => 'Data berhasil diperbarui.',
+            'attendance' => $attendance,
+        ], 200);
+    }
+
+    public function destroy($id)
+    {
+        $attendance = Attendance::findOrFail($id);
+        $attendance->delete();
+
+        return response()->json([
+            'message' => 'Data berhasil dihapus.',
+        ], 200);
+    }
     // public function report(Request $request)
     // {
     //     $request->validate([
@@ -259,14 +292,6 @@ class AttendanceController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Attendance $attendance)
     {
         //
     }

@@ -96,6 +96,12 @@
                     <th scope="col">
                         {{ __('Job Title') }}
                     </th>
+                    <th scope="col">
+                        {{ __('Time In') }}
+                    </th>
+                    <th scope="col">
+                        {{ __('Time Out') }}
+                    </th>
                     @if ($isPerDayFilter)
                         <th scope="col">
                             {{ __('Shift') }}
@@ -139,9 +145,7 @@
                         <td>
                             {{ $employee->division?->name ?? '-' }}
                         </td>
-                        <td>
-                            {{ $employee->jobTitle?->name ?? '-' }}
-                        </td>
+
                         @if ($isPerDayFilter)
                             <td>
                                 {{ $attendance['shift'] ?? '-' }}
