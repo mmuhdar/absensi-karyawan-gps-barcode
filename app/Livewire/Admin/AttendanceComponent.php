@@ -149,4 +149,9 @@ class AttendanceComponent extends Component
             });
         return view('livewire.admin.attendance', ['employees' => $employees, 'dates' => $dates]);
     }
+
+    public function triggerAttendanceModal()
+    {
+        $this->dispatch('openAttendanceModal');
+    }
 }

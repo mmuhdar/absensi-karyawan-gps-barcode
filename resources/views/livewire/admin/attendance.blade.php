@@ -5,13 +5,19 @@
     $isPerDayFilter = isset($date);
 @endphp
 <div>
-    @pushOnce('styles')
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    @endpushOnce
-    <h3 class="col-span-2 mb-4 text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
-        Data Absensi
-    </h3>
+    <div class="flex justify-between w-full">
+        <h3 class="col-span-2 mb-4 text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            Data Absensi
+        </h3>
+        <div class="flex items-center gap-2">
+            <x-button type="button" wire:click="triggerAttendanceModal">
+                {{ __('Buat Absensi Manual') }}
+            </x-button>
+        </div>
+    </div>
+
+    @livewire('create-attendance-modal')
+
     <div class="mb-1 text-sm dark:text-white">Filter:</div>
     <div class="mb-4 grid grid-cols-2 flex-wrap items-center gap-5 md:gap-8 lg:flex">
         <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
