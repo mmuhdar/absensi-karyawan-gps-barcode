@@ -33,6 +33,8 @@ class CreateAbsensi extends Command
             'gomedsulas@gmail.com',
             'ileilham47@gmail.com',
             'andimohsidik01@gmail.com',
+            // 'indraardiansyah2100@gmail.com',
+            // 'deswitawita100@gmail.com',
         ];
         $users = User::query()
             ->whereIn('email', $usersEmail)
@@ -47,9 +49,9 @@ class CreateAbsensi extends Command
 
         foreach ($users as $key => $value) {
             $timeIn = randomTime(8, 0, 37);
-            $timeOut = randomTime(14, 0, 28);
+            $timeOut = randomTime(16, 0, 17);
 
-            if (now()->dayOfWeek === 0) {
+            if (now()->dayOfWeek === 0 || now()->dayOfWeek === 6) {
                 Attendance::create([
                     'user_id' => $value->id,
                     'shift_id' => null,
