@@ -43,6 +43,7 @@ class User extends Authenticatable
         'division_id',
         'job_title_id',
         'profile_photo_path',
+        'room_id',
     ];
 
     /**
@@ -125,5 +126,10 @@ class User extends Authenticatable
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
     }
 }

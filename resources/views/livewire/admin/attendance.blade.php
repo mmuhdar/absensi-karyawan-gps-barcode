@@ -9,30 +9,38 @@
         <h3 class="col-span-2 mb-4 text-lg font-semibold leading-tight text-gray-800 dark:text-gray-200">
             Data Absensi
         </h3>
-        <div class="flex items-center gap-2">
-            <x-button type="button" wire:click="triggerAttendanceModal">
-                {{ __('Buat Absensi Manual') }}
-            </x-button>
-        </div>
+        @if (Auth::user()->isSuperAdmin)
+            <div class="flex items-center gap-2">
+                <x-button type="button" wire:click="triggerAttendanceModal">
+                    {{ __('Buat Absensi Manual') }}
+                </x-button>
+            </div>
+        @endif
     </div>
 
     @livewire('create-attendance-modal')
 
-    <div class="mb-1 text-sm dark:text-white">Filter:</div>
-    <div class="mb-4 grid grid-cols-2 flex-wrap items-center gap-5 md:gap-8 lg:flex">
-        <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
-            <x-label for="month_filter" value="Per Bulan"></x-label>
-            <x-input type="month" name="month_filter" id="month_filter" wire:model.live="month" />
+    <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {{-- Filter Per Bulan --}}
+        <div class="flex flex-col gap-2 lg:flex-row lg:items-center">
+            <x-label for="month_filter" value="Per Bulan" />
+            <x-input type="month" id="month_filter" name="month_filter" wire:model.live="month" class="w-full" />
         </div>
-        <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
-            <x-label for="week_filter" value="Per Minggu"></x-label>
-            <x-input type="week" name="week_filter" id="week_filter" wire:model.live="week" />
+
+        {{-- Filter Per Minggu --}}
+        <div class="flex flex-col gap-2 lg:flex-row lg:items-center">
+            <x-label for="week_filter" value="Per Minggu" />
+            <x-input type="week" id="week_filter" name="week_filter" wire:model.live="week" class="w-full" />
         </div>
-        <div class="col-span-2 flex flex-col gap-3 lg:flex-row lg:items-center">
-            <x-label for="day_filter" value="Per Hari"></x-label>
-            <x-input type="date" name="day_filter" id="day_filter" wire:model.live="date" />
+
+        {{-- Filter Per Hari --}}
+        <div class="flex flex-col gap-2 lg:flex-row lg:items-center sm:col-span-2 lg:col-span-1">
+            <x-label for="day_filter" value="Per Hari" />
+            <x-input type="date" id="day_filter" name="day_filter" wire:model.live="date" class="w-full" />
         </div>
-        <x-select id="division" wire:model.live="division">
+
+        {{-- Divisi --}}
+        <x-select id="division" wire:model.live="division" class="w-full">
             <option value="">{{ __('Select Division') }}</option>
             @foreach (App\Models\Division::all() as $_division)
                 <option value="{{ $_division->id }}" {{ $_division->id == $division ? 'selected' : '' }}>
@@ -40,7 +48,9 @@
                 </option>
             @endforeach
         </x-select>
-        <x-select id="jobTitle" wire:model.live="jobTitle">
+
+        {{-- Jabatan --}}
+        <x-select id="jobTitle" wire:model.live="jobTitle" class="w-full">
             <option value="">{{ __('Select Job Title') }}</option>
             @foreach (App\Models\JobTitle::all() as $_jobTitle)
                 <option value="{{ $_jobTitle->id }}" {{ $_jobTitle->id == $jobTitle ? 'selected' : '' }}>
@@ -48,24 +58,48 @@
                 </option>
             @endforeach
         </x-select>
-        <div class="col-span-2 flex items-center gap-2 lg:w-96">
-            <x-input type="text" class="w-full" name="search" id="seacrh" wire:model="search"
+
+        {{-- Ruangan --}}
+        <x-select id="roomId" wire:model.live="roomId" class="w-full">
+            <option value="">{{ __('Pilih Ruangan') }}</option>
+            @foreach (App\Models\Room::all() as $_room)
+                <option value="{{ $_room->id }}" {{ $_room->id == $roomId ? 'selected' : '' }}>
+                    {{ $_room->name }}
+                </option>
+            @endforeach
+        </x-select>
+
+        {{-- Search Box --}}
+        <div class="flex items-center gap-2 sm:col-span-2 lg:col-span-2">
+            <x-input type="text" id="search" name="search" class="w-full" wire:model="search"
                 placeholder="{{ __('Search') }}" />
-            <x-button type="button" wire:click="$refresh" wire:loading.attr="disabled">{{ __('Search') }}</x-button>
+            <x-button type="button" wire:click="$refresh" wire:loading.attr="disabled">
+                {{ __('Search') }}
+            </x-button>
             @if ($search)
                 <x-secondary-button type="button" wire:click="$set('search', '')" wire:loading.attr="disabled">
                     {{ __('Reset') }}
                 </x-secondary-button>
             @endif
         </div>
-        <div class="lg:hidden"></div>
-        <x-secondary-button
-            href="{{ route('admin.attendances.report', ['month' => $month, 'week' => $week, 'date' => $date, 'division' => $division, 'jobTitle' => $jobTitle]) }}"
-            class="flex justify-center gap-2">
-            Cetak Laporan
-            <x-heroicon-o-printer class="h-5 w-5" />
-        </x-secondary-button>
+
+        {{-- Cetak Laporan --}}
+        <div class="sm:col-span-2 lg:col-span-1">
+            <x-secondary-button
+                href="{{ route('admin.attendances.report', [
+                    'month' => $month,
+                    'week' => $week,
+                    'date' => $date,
+                    'division' => $division,
+                    'jobTitle' => $jobTitle,
+                ]) }}"
+                class="flex w-full justify-center gap-2">
+                Cetak Laporan
+                <x-heroicon-o-printer class="h-5 w-5" />
+            </x-secondary-button>
+        </div>
     </div>
+
     <div class="overflow-x-scroll">
         <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead class="bg-gray-50 dark:bg-gray-900">
@@ -76,7 +110,7 @@
                     @if ($showUserDetail)
                         <th scope="col"
                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
-                            {{ __('NIP') }}
+                            {{ __('Ruangan') }}
                         </th>
                         <th scope="col"
                             class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300">
@@ -158,8 +192,9 @@
                             {{ $employee->name }}
                         </td>
                         @if ($showUserDetail)
-                            <td class="{{ $class }} group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
-                                {{ $employee->nip }}
+                            <td
+                                class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">
+                                {{ $employee->room?->name ?? '-' }}
                             </td>
                             <td
                                 class="{{ $class }} text-nowrap group-hover:bg-gray-100 dark:group-hover:bg-gray-700">

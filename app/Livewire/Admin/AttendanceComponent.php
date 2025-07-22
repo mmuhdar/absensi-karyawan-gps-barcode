@@ -25,6 +25,7 @@ class AttendanceComponent extends Component
     public ?string $division = null;
     public ?string $jobTitle = null;
     public ?string $search = null;
+    public ?string $roomId = null;
 
     public function mount()
     {
@@ -74,6 +75,7 @@ class AttendanceComponent extends Component
             })
             ->when($this->division, fn(Builder $q) => $q->where('division_id', $this->division))
             ->when($this->jobTitle, fn(Builder $q) => $q->where('job_title_id', $this->jobTitle))
+            ->when($this->roomId, fn(Builder $q) => $q->where('room_id', $this->roomId))
             ->paginate(20)
             ->through(function (User $user) {
                 if ($this->date) {

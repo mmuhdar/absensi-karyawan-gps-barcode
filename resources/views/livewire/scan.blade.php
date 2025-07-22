@@ -72,9 +72,9 @@
                     Maaf anda belum melakukan penjadwalan shift untuk hari ini.
                     </h4>
             @endif
-            @if (Auth::user()->division_id === null || Auth::user()->job_title_id === null)
+            @if (Auth::user()->division_id === null || Auth::user()->job_title_id === null || Auth::user()->room_id === null)
                 <h4" class="mb-3 text-lg font-semibold text-red-500 dark:text-red-400 sm:text-xl">
-                    Lengkapi semua data terlebih dahulu untuk melakukan scan.
+                    Lengkapi semua data (Divisi, Jabatan dan Ruangan) terlebih dahulu untuk melakukan scan.
                     </h4>
             @endif
             @if ($isAbsence && ($attendance->status == 'holiday' || $attendance->status == 'lepas_jaga'))

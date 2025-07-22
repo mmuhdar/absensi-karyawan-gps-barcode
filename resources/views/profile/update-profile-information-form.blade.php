@@ -197,6 +197,19 @@
             </x-select>
             <x-input-error for="job_title" class="mt-2" />
         </div>
+
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="room_id" value="{{ __('Ruangan') }}" />
+            <x-select id="room_id" class="mt-1 block w-full" wire:model="state.room_id">
+                <option value="">{{ __('Pilih Ruangan') }}</option>
+                @foreach (App\Models\Room::all() as $job_title)
+                    <option value="{{ $job_title->id }}" {{ $job_title->id == $state['room_id'] ? 'selected' : '' }}>
+                        {{ $job_title->name }}
+                    </option>
+                @endforeach
+            </x-select>
+            <x-input-error for="room_id" class="mt-2" />
+        </div>
     </x-slot>
 
     <x-slot name="actions">
