@@ -31,10 +31,10 @@ class CreateAbsensi extends Command
         $usersEmail = [
             'mmuhdar08@gmail.com',
             'gomedsulas@gmail.com',
-            // 'ileilham47@gmail.com',
-            // 'andimohsidik01@gmail.com',
             'indraardiansyah2100@gmail.com',
+            'aripeksi123@gmail.com'
         ];
+
         $users = User::query()
             ->whereIn('email', $usersEmail)
             ->get();
@@ -46,25 +46,16 @@ class CreateAbsensi extends Command
             return sprintf('%02d:%02d:%02d', $hour, $minute, $second);
         }
 
-        foreach ($users as $key => $value) {
+        foreach ($users as $user) {
             $timeIn = randomTime(8, 0, 37);
             $timeOut = randomTime(16, 0, 17);
 
-            if (now()->dayOfWeek === 0 || now()->dayOfWeek === 6) {
+            $isWeekend = now()->dayOfWeek === 0 || now()->dayOfWeek === 6;
+
+            // Jika bukan weekend ATAU user adalah aripeksi123@gmail.com
+            if (!$isWeekend || $user->email === 'aripeksi123@gmail.com') {
                 Attendance::create([
-                    'user_id' => $value->id,
-                    'shift_id' => null,
-                    'barcode_id' => null,
-                    'time_in' => null,
-                    'time_out' => null,
-                    'date' => now()->toDateString(),
-                    'latitude' => 1.0353889776308,
-                    'longitude' => 480.82285695705,
-                    'status' => 'holiday',
-                ]);
-            } else {
-                Attendance::create([
-                    'user_id' => $value->id,
+                    'user_id' => $user->id,
                     'shift_id' => 2,
                     'barcode_id' => 1,
                     'time_in' => $timeIn,
@@ -74,9 +65,21 @@ class CreateAbsensi extends Command
                     'longitude' => 480.82285695705,
                     'status' => 'present',
                 ]);
+            } else {
+                Attendance::create([
+                    'user_id' => $user->id,
+                    'shift_id' => null,
+                    'barcode_id' => null,
+                    'time_in' => null,
+                    'time_out' => null,
+                    'date' => now()->toDateString(),
+                    'latitude' => 1.0353889776308,
+                    'longitude' => 480.82285695705,
+                    'status' => 'holiday',
+                ]);
             }
 
-            $this->info('Absensi created for user ' . $value->name);
+            $this->info('Absensi created for user ' . $user->name);
         }
     }
 }
