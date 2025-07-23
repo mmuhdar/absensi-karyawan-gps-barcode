@@ -4,7 +4,11 @@
         use Illuminate\Support\Carbon;
         function checkProfile()
         {
-            if (Auth::user()->division_id === null || Auth::user()->job_title_id === null) {
+            if (
+                Auth::user()->division_id === null ||
+                Auth::user()->job_title_id === null ||
+                Auth::user()->room_id === null
+            ) {
                 return false;
             } else {
                 return true;
