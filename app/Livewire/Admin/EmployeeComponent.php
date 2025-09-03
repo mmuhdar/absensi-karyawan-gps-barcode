@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Livewire\Forms\UserForm;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -80,8 +81,15 @@ class EmployeeComponent extends Component
 
     public function delete()
     {
-        $user = User::find($this->selectedId);
-        $this->form->setUser($user)->delete();
+        DB::transaction(function () {
+            $user = User::find($this->selectedId);
+
+            if ($user) {
+                $user->attendances()->delete();
+                $this->form->setUser($user)->delete();
+            }
+        });
+
         $this->confirmingDeletion = false;
         $this->banner(__('Deleted successfully.'));
     }
