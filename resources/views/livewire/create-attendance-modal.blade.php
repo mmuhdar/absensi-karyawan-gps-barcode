@@ -51,17 +51,18 @@
                         <input type="date" wire:model="date"
                             class="w-full border-gray-300 rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-blue-500" />
                     </div>
-                    {{-- <div>
+                    <div>
                         <label class="block text-gray-700 font-medium mb-1">Status</label>
                         <select wire:model="status"
                             class="w-full border-gray-300 rounded-lg p-2 sm:p-3 focus:ring-2 focus:ring-blue-500">
                             <option value="present">Hadir</option>
                             <option value="late">Terlambat</option>
                             <option value="sick">Sakit</option>
-                            <option value="absent">Absen</option>
                             <option value="leave">Cuti</option>
+                            <option value="holiday">Libur</option>
+                            <option value="lepas_jaga">Lepas Jaga</option>
                         </select>
-                    </div> --}}
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-700 font-medium mb-1">Waktu Masuk</label>

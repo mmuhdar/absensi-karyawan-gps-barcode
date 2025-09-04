@@ -46,21 +46,38 @@ class CreateAttendanceModal extends Component
     {
         $this->validate();
 
-        Attendance::create([
-            'user_id' => $this->employee_id,
-            'shift_id' => $this->shift_id,
-            'barcode_id' => $this->barcode_id,
-            'latitude' => 1.0354721102108,
-            'longitude' => 120.82266927373,
-            'date' => $this->date,
-            'status' => "present",
-            'time_in' => $this->time_in,
-            'time_out' => $this->time_out,
-        ]);
+        if (in_array($this->status, ['present', 'late'])) {
+            // Status normal, simpan semua field
+            Attendance::create([
+                'user_id'   => $this->employee_id,
+                'shift_id'  => $this->shift_id,
+                'barcode_id' => $this->barcode_id,
+                'latitude'  => 1.0354721102108,
+                'longitude' => 120.82266927373,
+                'date'      => $this->date,
+                'status'    => $this->status,
+                'time_in'   => $this->time_in,
+                'time_out'  => $this->time_out,
+            ]);
+        } else {
+            // Status selain present/late → hanya isi user_id, status, date
+            Attendance::create([
+                'user_id'   => $this->employee_id,
+                'status'    => $this->status,
+                'date'      => $this->date,
+                'shift_id'  => null,
+                'barcode_id' => null,
+                'latitude'  => null,
+                'longitude' => null,
+                'time_in'   => null,
+                'time_out'  => null,
+            ]);
+        }
 
-        session()->flash('message', 'Absensi berhasil ditambahkan.');
+        $this->dispatch('toast', type: 'success', message: 'Absensi berhasil ditambahkan.');
         $this->closeModal();
     }
+
 
     public function render()
     {
