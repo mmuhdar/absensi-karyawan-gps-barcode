@@ -35,6 +35,7 @@ class CreateAttendanceModal extends Component
         $this->shifts = Shift::all();
         $this->barcode = Barcode::all();
         $this->isOpen = true;
+        $this->status = 'present';
     }
 
     public function closeModal()

@@ -1,26 +1,41 @@
 # <IfModule mod_rewrite.c>
-#     <IfModule mod_negotiation.c>
-#         Options -MultiViews -Indexes
-#     </IfModule>
-
 #     RewriteEngine On
 
-#     # Handle Authorization Header
-#     RewriteCond %{HTTP:Authorization} .
-#     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+#     # Redirect semua ke HTTPS (opsional, kalau sudah pakai SSL)
+#     RewriteCond %{HTTPS} off
+#     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-#     # Redirect Trailing Slashes If Not A Folder...
-#     RewriteCond %{REQUEST_FILENAME} !-d
-#     RewriteCond %{REQUEST_URI} (.+)/$
-#     RewriteRule ^ %1 [L,R=301]
+#     # Cegah akses langsung ke file .env, composer, dsb
+#     RewriteRule ^(\.env|\.git|\.htaccess|\.idea|\.vscode|storage|vendor|composer\.(json|lock)|artisan|server\.php) - [F,L,NC]
 
-#     # Send Requests To Front Controller...
-#     RewriteCond %{REQUEST_FILENAME} !-d
+#     # Laravel Rewrite: arahkan semua request ke index.php
 #     RewriteCond %{REQUEST_FILENAME} !-f
+#     RewriteCond %{REQUEST_FILENAME} !-d
 #     RewriteRule ^ index.php [L]
-
-#     RewriteRule ^storage/(.*)$ ../storage/app/public/$1 [L,NC]
 # </IfModule>
+
+# # Proteksi tambahan terhadap PHP execution di folder upload (ganti sesuai struktur kamu)
+# <Directory "uploads">
+#     <FilesMatch "\.(php|php5|phtml)$">
+#         Order Deny,Allow
+#         Deny from all
+#     </FilesMatch>
+# </Directory>
+
+# # Nonaktifkan directory listing (penting)
+# Options -Indexes
+
+# # Matikan cache untuk file sensitif
+# <FilesMatch "\.(php|html|htm)$">
+#     Header set Cache-Control "no-store, no-cache, must-revalidate"
+# </FilesMatch>
+
+# # Batasi akses file backup atau arsip
+# <FilesMatch "\.(zip|sql|bak|tar|gz|rar)$">
+#     Order Deny,Allow
+#     Deny from all
+# </FilesMatch>
+
 
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
@@ -42,4 +57,6 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    RewriteRule ^storage/(.*)$ ../storage/app/public/$1 [L,NC]
 </IfModule>
